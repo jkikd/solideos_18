@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"> <!-- 한글 인코딩 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 웹을 위한 뷰포트 설정 -->
+    <title>중소벤처기업부 주간 사업공고 요약</title> <!-- 브라우저 탭에 표시될 제목 -->
+    <link rel="stylesheet" href="style.css"> <!-- 외부 CSS 파일 연결 -->
+</head>
+<body>
+    <!-- 공지사항 제목 -->
+    <h1>중소벤처기업부 주간 사업공고 요약</h1>
+    <!-- 공지사항 및 사업공고를 위한 섹션 -->
+    <div id="notice-section">
+        <!-- 사업공고 테이블 -->
+        <h2>사업공고</h2>
+        <table id="biz-table" border="1">
+            <thead><tr><th>제목</th><th>날짜</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- 게임 로직이 담긴 자바스크립트 파일 연결 -->
+    <script src="snake.js"></script>
+    <script>
+    // 사업공고 표 채우기
+    fetch('recent_posts.json')
+      .then(res => res.json())
+      .then(data => {
+        const posts = data.bizs || [];
+        const tbody = document.querySelector('#biz-table tbody');
+        tbody.innerHTML = '';
+        if (posts.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="2">최근 1주일 내 게시글이 없습니다.</td></tr>';
+          return;
+        }
+        posts.forEach(post => {
+          const tr = document.createElement('tr');
+          const tdTitle = document.createElement('td');
+          const a = document.createElement('a');
+          a.href = post.url;
+          a.textContent = post.title;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          tdTitle.appendChild(a);
+          const tdDate = document.createElement('td');
+          tdDate.textContent = post.date;
+          tr.appendChild(tdTitle);
+          tr.appendChild(tdDate);
+          tbody.appendChild(tr);
+        });
+      });
+    </script>
+</body>
+</html>
